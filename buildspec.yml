@@ -1,16 +1,18 @@
 version: 0.2
 env:
   variables:
-    LOGIN: "1f7851fa55921785f850d0e6d17248784b92aacc"  # SonarCloud token 
+    LOGIN: "e66a8a001dc42f3b8ecc6300c48b1341dcf048b6"  # SonarCloud token 
     HOST: "https://sonarcloud.io/"  # SonarCloud URL
     Organization: "sanjeevbsnt"  # SonarCloud organization key
     Project: "sonarcloud-aws"  # SonarCloud project key
+
 phases:
   install:
     runtime-versions:
       nodejs: 20
     commands:
       - echo "Install phase ..."
+
   pre_build:
     commands:
       - echo "Pre build phase ..."
@@ -19,15 +21,21 @@ phases:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
       - unzip sonar-scanner-cli-4.7.0.2747-linux.zip
       - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin/
+
   build:
     commands:
       - echo "Build phase ..."
-      - sonar-scanner -Dsonar.login=1f7851fa55921785f850d0e6d17248784b92aacc -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=sonarcloud-aws -Dsonar.organization=sanjeevbsnt
-
+      - sonar-scanner \
+          -Dsonar.login=$LOGIN \
+          -Dsonar.host.url=$HOST \
+          -Dsonar.projectKey=$Project \
+          -Dsonar.organization=$Organization
       - sleep 5
       - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project" > result.json
       - cat result.json
       - if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then exit 1; fi
+
   post_build:
     commands:
       - echo "Post build phase ..."
+
