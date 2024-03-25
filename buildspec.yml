@@ -1,10 +1,10 @@
 version: 0.2
 env:
-  variables:
-    LOGIN: "e66a8a001dc42f3b8ecc6300c48b1341dcf048b6"  # SonarCloud token 
-    HOST: "https://sonarcloud.io/"  # SonarCloud URL
-    Organization: "sanjeevbsnt"  # SonarCloud organization key
-    Project: "sonarcloud-aws"  # SonarCloud project key
+  secrets-manager:
+    LOGIN: local/sonar:sonartoken
+    HOST: local/sonar:HOST
+    Organization: local/sonar:Organization
+    Project: local/sonar:Project
 
 phases:
   install:
@@ -26,10 +26,11 @@ phases:
     commands:
       - echo "Build phase ..."
       - sonar-scanner \
-          -Dsonar.organization=sanjeevbsnt \
-          -Dsonar.projectKey=sanjeevbsnt_sonarcloud-aws \
+          -Dsonar.organization=$Organization \
+          -Dsonar.projectKey=$Project \
           -Dsonar.sources=. \
-          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.login=$LOGIN \
+          -Dsonar.host.url=$HOST
       - sleep 5
       - curl "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project" > result.json
       - cat result.json
