@@ -1,7 +1,7 @@
 version: 0.2
 env:
   variables:
-    LOGIN: "1f7851fa55921785f850d0e6d17248784b92aacc"  # SonarCloud token
+    LOGIN: "local/sonar"  # SonarCloud token 
     HOST: "https://sonarcloud.io/"  # SonarCloud URL
     Organization: "sanjeevbsnt"  # SonarCloud organization key
     Project: "sonarcloud-aws"  # SonarCloud project key
@@ -30,4 +30,3 @@ phases:
   post_build:
     commands:
       - echo "Post build phase ..."
-
